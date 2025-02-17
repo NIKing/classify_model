@@ -2,7 +2,7 @@ from models.Model import Model
 from layers import LinearLayer
 
 class PointModel(Model):
-    def __init__(self, lr = 0.0):
+    def __init__(self, lr=0.0, seq_size=0, label_size=0):
         super(PointModel, self).__init__()
      
         self.learning_rate = lr
@@ -10,9 +10,9 @@ class PointModel(Model):
         
         # 若无必要，勿增实体。第0层没有神经元，就不要申明网络层次，让模型去学习他
         #self.h0 = InputLayer(input_dim = 1, output_dim = 6)
-        self.h1 = LinearLayer(input_dim = 2, output_dim = 6, is_normal = True)
+        self.h1 = LinearLayer(input_dim = seq_size, output_dim = 6, is_normal = True)
         self.h2 = LinearLayer(input_dim = 6, output_dim = 6, is_normal = True)
-        self.h3 = LinearLayer(input_dim = 6, output_dim = 1, activation = 'Identical', is_normal = False)
+        self.h3 = LinearLayer(input_dim = 6, output_dim = label_size, activation = 'Identical', is_normal = False)
         
         self.layers = {
             #'h0': self.h0,
