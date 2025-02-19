@@ -12,7 +12,7 @@ class PointModel(Model):
         #self.h0 = InputLayer(input_dim = 1, output_dim = 6)
         self.h1 = LinearLayer(input_dim = seq_size, output_dim = 6, is_normal = True)
         self.h2 = LinearLayer(input_dim = 6, output_dim = 6, is_normal = True)
-        self.h3 = LinearLayer(input_dim = 6, output_dim = label_size, activation = 'Identical', is_normal = False)
+        self.h3 = LinearLayer(input_dim = 6, output_dim = label_size, activation = 'SoftMax', is_normal = False)
         
         self.layers = {
             #'h0': self.h0,
@@ -39,7 +39,7 @@ class PointModel(Model):
         #print(f'h_2={h_2}')
 
         h_3 = self.h3(h_2)
-        #print(f'h_3={h_3}')
+        print(f'h_3={h_3}')
     
         #print('='*20, 'forward End', '='*20)
 

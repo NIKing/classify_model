@@ -1,5 +1,3 @@
-
-
 def encode(char):
     return ord(char)
 

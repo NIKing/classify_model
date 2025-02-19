@@ -4,7 +4,7 @@ import numpy as np
 from models import PointModel
 from dataloader import DataLoader
 
-from loss import EntropyCrossLoss
+from loss import CrossEntropyLoss
 
 seed = 40
 random.seed(seed)
@@ -13,8 +13,8 @@ np.random.seed(seed)
 # 效果最好的参数 [8e-3, 55],
 # [6e-3, 5]
 
-model = PointModel(lr=6e-3, seq_len=3, label_size=2)
-loss = EntropyCrossLoss(model)
+model = PointModel(lr=6e-3, seq_size=3, label_size=2)
+loss = CrossEntropyLoss(model)
 
 def loss_callback(predict, target):
     return loss(predict, target)
@@ -37,9 +37,9 @@ def train(train_dataset):
             features, results = zip(*batch_data)
 
             features = np.array(features, dtype=np.int32)
-            results = np.expand_dims(np.array(results, dtype=np.int32), -1)
-            #print(features, features.shape)
-            #print(results, results.shape)
+            results = np.array(results, dtype=np.int32)
+            print(features, features.shape)
+            print(results, results.shape)
 
             # 模型预测
             outputs = model(features)

@@ -1,2 +1,2 @@
 from .SquareLoss import SquareLoss
-from .EntropyCrossLoss import EntropyCrossLoss
+from .CrossEntropyLoss import CrossEntropyLoss

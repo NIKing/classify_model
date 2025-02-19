@@ -20,3 +20,11 @@ class Functional():
     def Identical(net_input):
         """恒等函数"""
         return net_input
+
+    @staticmethod
+    def SoftMax(net_input):
+        return np.exp(net_input) / np.sum(np.exp(net_input))
+    
+    @staticmethod
+    def SoftMax_delta(net_input):
+        pass

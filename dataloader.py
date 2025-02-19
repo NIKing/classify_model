@@ -57,7 +57,7 @@ class DataLoader():
                 if len(name_codes) < self.max_len:
                     name_codes = name_codes + [0] * (self.max_len - len(name_codes))
 
-                name_sex_list.append((name_codes, self.labels[sex]))
+                name_sex_list.append((name_codes, [1 if sex == '男' else 0, 1 if sex == '女' else 0]))  # （姓名列表，性别列表=>[男，女]）
             
             convert_result.append(name_sex_list)
 

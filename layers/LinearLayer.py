@@ -35,13 +35,17 @@ class LinearLayer():
         self.beta = np.zeros(self.output_dim)  # 偏移因子
         
         # 定义下激活函数
-        self.activation = activation
+        self.activation_name = activation
         self.activation_fn = Functional.Identical
         self.delta_fn = None
 
         if activation == 'ReLU':
             self.activation_fn = Functional.Leaky_relu
             self.delta_fn = Functional.ReLU_delta
+
+        elif activation == 'SoftMax':
+            self.activation_fn = Functional.SoftMax
+            self.delta_fn = Functional.SoftMax_delta
 
     def __call__(self, features):
         """这是代表神经元函数，每个输入都需要与权重参数发生线性变换，再经过非线性变换，最后输出"""
@@ -56,15 +60,15 @@ class LinearLayer():
 
         # 仿射变换
         self.net_input = self.affine_fn(features)
-        #print('净输入:', self.net_input)
+        print('净输入:', self.net_input)
         #print('净输入均值', np.mean(self.net_input, axis=1))
         #print('净输入标准差', np.std(self.net_input, axis=1))
-        #print()
+        print()
 
         if self.is_normal:
             # 归一化
             self.net_input_normal = self.standardization(self.net_input)
-            #print('归一化净输入:', self.net_input_normal)
+            print('归一化净输入:', self.net_input_normal)
             #print('归一化均值', np.mean(self.net_input_normal, axis=1))
             #print('归一化标准差', np.var(self.net_input_normal, axis=1))
             #print()
@@ -74,7 +78,7 @@ class LinearLayer():
 
             # 二次仿射变换
             self.net_input = self.affine_fn_by_normal(self.net_input_normal)
-            #print('二次仿射变换:', self.net_input)
+            print('二次仿射变换:', self.net_input)
 
         else:
             # 虽然输出层没有归一化，但是为了反向传播计算，需要赋值
