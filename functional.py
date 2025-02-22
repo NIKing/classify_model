@@ -23,6 +23,7 @@ class Functional():
 
     @staticmethod
     def SoftMax(net_input):
+        """软最大化函数"""
         return np.exp(net_input) / np.sum(np.exp(net_input))
     
     @staticmethod

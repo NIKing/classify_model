@@ -8,23 +8,22 @@ class CrossEntropyLoss(Loss):
         self.loss = 0.0
         self.loss_error = [0.0]
         self.batch_size = 0
+    
+    def item(self):
+        return self.loss
 
     def __call__(self, predict, target):
-        print('计算损失值')
-        print(predict)
-        print(target)
-        print()
+        #print('计算损失值')
+        #print(predict)
+        #print(target)
+        #print()
         
-        pred_log = np.log(predict)
+        self.batch_size = target.shape[0]
+
+        # 损失值，只是衡量模型“误差”
+        self.loss = np.mean(-np.sum(target * np.log(predict), axis=1))
         
-        classify_dot = np.dot(target, pred_log)
-
-        loss = -np.sum(classify_dot, axis=-1, keepdims=True)
-
-        print(pred_log)
-        print(classify_dot)
-        print(loss)
-
-        print('计算结束')
+        # 输出层误差，它是输出层的梯度
+        self.loss_error = predict - target
 
         return self

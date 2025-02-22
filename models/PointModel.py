@@ -39,7 +39,7 @@ class PointModel(Model):
         #print(f'h_2={h_2}')
 
         h_3 = self.h3(h_2)
-        print(f'h_3={h_3}')
+        #print(f'h_3={h_3}')
     
         #print('='*20, 'forward End', '='*20)
 
