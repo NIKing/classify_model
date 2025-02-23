@@ -15,7 +15,7 @@ np.random.seed(seed)
 label2id = {'未知': 0, '女': 2, '男': 1}
 id2label = {0: '未知', 2: '女', 1: '男'}
 
-model = PointModel(lr=1e-3, seq_size=3, label_size=len(label2id))
+model = PointModel(lr=1e-2, seq_size=3, label_size=len(label2id))
 loss = CrossEntropyLoss(model)
 
 def loss_callback(predict, target):
@@ -24,7 +24,7 @@ def loss_callback(predict, target):
 def train(train_dataset):
     
     # 迭代训练，用于查看损失函数变化
-    for i in range(5):
+    for i in range(45):
         
         print('*'*40, f'第{i+1}轮次训练', '*'*40)
 
@@ -80,7 +80,7 @@ def test(test_dataset):
         
         print(f'Test Epoech:{i}/{len(test_dataset)}')
         output = model(features)
-        #print(output)
+        print(output)
         output = np.argmax(output)
 
         print(output, id2label[output])

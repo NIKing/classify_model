@@ -49,6 +49,10 @@ class Loss():
             
             #print(f'第{i}层输入T', current_input.T)
 
+            # 正则化处理
+            if layer.dropout != None:
+                layer_error *= layer.dropout.d
+
             # 计算当前层权重参数梯度：连接误差值 * 当前层输入（上一层的输出）, 由链式法则推导得出
             layer_gradient = np.dot(current_input.T, layer_error) / self.batch_size
 
