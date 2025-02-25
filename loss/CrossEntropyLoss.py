@@ -13,10 +13,11 @@ class CrossEntropyLoss(Loss):
         return self.loss
 
     def __call__(self, predict, target):
-        #print('计算损失值')
-        #print(predict)
-        #print(target)
-        #print()
+        # print('计算损失值')
+        # https://www.jb51.net/article/274051.htm
+        print(predict)
+        print(target)
+        print()
         
         self.batch_size = target.shape[0]
 
