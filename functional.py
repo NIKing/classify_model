@@ -24,7 +24,7 @@ class Functional():
     @staticmethod
     def SoftMax(net_input):
         """软最大化函数"""
-        return np.exp(net_input) / np.sum(np.exp(net_input))
+        return np.exp(net_input) / np.sum(np.exp(net_input), axis=-1, keepdims=True)
     
     @staticmethod
     def SoftMax_delta(net_input):
