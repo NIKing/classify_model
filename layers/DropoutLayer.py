@@ -1,6 +1,6 @@
 import numpy as np
 
-class Dropout():
+class DropoutLayer():
     def __init__(self, rate=1.0):
         self.p = rate
 

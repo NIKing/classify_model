@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-from models import PointModel
+from models import ClassifyModel 
 from dataloader import DataLoader, Word2Vocab
 
 from loss import CrossEntropyLoss
@@ -15,7 +15,7 @@ np.random.seed(seed)
 label2id = {'未知': 0, '女': 2, '男': 1}
 id2label = {0: '未知', 2: '女', 1: '男'}
 
-model = PointModel(lr=1e-4, seq_size=3, label_size=len(label2id))
+model = ClassifyModel(lr=1e-4, seq_size=3, label_size=len(label2id))
 loss = CrossEntropyLoss(model)
 
 def loss_callback(predict, target):

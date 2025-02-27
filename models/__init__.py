@@ -1,2 +1,1 @@
-from .LinearModel import LinearModel
-from .PointModel import PointModel
+from .ClassifyModel import ClassifyModel

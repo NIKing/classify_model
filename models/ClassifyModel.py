@@ -1,9 +1,9 @@
 from models.Model import Model
-from layers import LinearLayer, Dropout
+from layers import LinearLayer, DropoutLayer, NormalLayer
 
-class PointModel(Model):
+class ClassifyModel(Model):
     def __init__(self, lr=0.0, seq_size=0, label_size=0):
-        super(PointModel, self).__init__()
+        super(ClassifyModel, self).__init__()
      
         self.learning_rate = lr
         self.in_features = None
@@ -14,8 +14,11 @@ class PointModel(Model):
         self.h2 = LinearLayer(input_dim = 6, output_dim = 6, is_normal = False)
         self.h3 = LinearLayer(input_dim = 6, output_dim = label_size, activation = 'SoftMax', is_normal = False)
 
-        self.h1.dropout = Dropout(0.8)
-        self.h2.dropout = Dropout(0.5)
+        self.h1.dropout = DropoutLayer(0.8)
+        self.h2.dropout = DropoutLayer(0.5)
+
+        #self.h1.normal = NormalLayer()
+        #self.h2.noraml = NormalLayer()
 
         self.layers = {
             #'h0': self.h0,

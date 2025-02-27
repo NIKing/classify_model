@@ -7,8 +7,10 @@ from torch.nn import CrossEntropyLoss
 def cross_entropy_loss_by_my(logits, target):
     predict_distribution = np.exp(logits) / np.sum(np.exp(logits), axis=-1, keepdims=True)
 
-    print('每个样本中每个类别的指数', np.exp(logits))
-    print('每个样本中所有类别指数的和', np.sum(np.exp(logits), axis=-1, keepdims=True))
+    print('每个样本中各类别的指数', np.exp(logits))
+    print('每个样本中各类别指数的和', np.sum(np.exp(logits), axis=-1, keepdims=True))
+    
+    print('所有样本中类别指数的和', np.sum(np.exp(logits)))
 
     print('每个样本中每个类别的归一化因子, 或者说是每个样本中每个类别的预测概率分布:')
     print(predict_distribution)
@@ -16,7 +18,7 @@ def cross_entropy_loss_by_my(logits, target):
     
     target_distribution = np.array([[1, 0, 0], [0, 0, 1]])
 
-    loss_val = -np.mean(np.sum(target_distribution * np.log(predict_distribution), axis=1))
+    loss_val = np.mean(-np.sum(target_distribution * np.log(predict_distribution), axis=1))
     print(loss_val)
 
 def cross_entropy_loss_by_new_1(logits, target):
@@ -56,6 +58,6 @@ if __name__ == '__main__':
     #cross_entropy_loss_by_pytorch(logits, target)
     #print()
 
-    #cross_entropy_loss_by_new_1(logits, target)
+    cross_entropy_loss_by_new_1(logits, target)
 
 
