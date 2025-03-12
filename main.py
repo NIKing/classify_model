@@ -2,9 +2,10 @@ import random
 import numpy as np
 
 from models import ClassifyModel 
-from dataloader import DataLoader, Word2Vocab
+from dataloader import DataLoader
 
 from loss import CrossEntropyLoss
+from feature import Features
 
 seed = 40
 random.seed(seed)
@@ -30,7 +31,7 @@ def train(train_dataset):
 
         model.train()
         
-        train_data = DataLoader(train_dataset, vocab=vocab, shuffle=True, batch_size=2, max_len=3)
+        train_data = DataLoader(train_dataset, shuffle=True, batch_size=2)
         iter_data = iter(train_data)
         batch_data = next(iter_data)
          
@@ -109,10 +110,14 @@ if __name__ == '__main__':
     ]
 
     # 建立词表
-    vocab = Word2Vocab(train_dataset + test_dataset)
     
-    train(train_dataset)
+    feature = Features()
+
+    train_instance = feature.readInstance('./cnname/test.csv')
+    print(train_instance)
+
+    #train(train_data)
     
-    test(test_dataset)
+    #test(test_data)
 
 
