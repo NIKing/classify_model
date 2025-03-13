@@ -5,8 +5,8 @@ class Model():
 
         self.learning_reate = 1e-3
 
-    def __call__(self, input_ids):
-        return self.forward(input_ids)
+    def __call__(self, input_ids, *args, **kwargs):
+        return self.forward(input_ids, *args, **kwargs)
     
     def train(self):
         self.training = True
@@ -17,19 +17,3 @@ class Model():
     def forward(self, input_ids):
         pass
     
-    def get_parameters(self):
-        return self.parameters
-
-    def update_parameters(self, layer_num, weights):
-        """更新权重参数"""
-        self.layers[layer_num].weight_matrix = weights
-
-    def update_gamma(self, layer_num, gamma):
-        """更新缩放因子"""
-        #print('gamma', layer_num, gamma)
-        self.layers[layer_num].gamma = gamma
-
-    def update_beta(self, layer_num, beta):
-        """更新平移参数"""
-        #print('beta', layer_num, beta)
-        self.layers[layer_num].beta = beta

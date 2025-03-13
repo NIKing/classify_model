@@ -42,9 +42,14 @@ class NormalLayer():
         return (z - mean_value) / (std_value + 1e-5)
 
     def affine_fn_by_normal(self, z):
-        """
-        层归一化后的仿射变换
-        -param z tensor 净输入
-        return tensors
-        """
+        """层归一化后的仿射变换"""
         return self.gamma * z + self.beta
+
+    def update_gamma(self, gamma):
+        """更新缩放因子"""
+        self.gamma = gamma
+
+    def update_beta(self, beta):
+        """更新平移参数"""
+        self.beta = beta
+

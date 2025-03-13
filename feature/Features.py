@@ -22,7 +22,7 @@ class Features():
         self.featureMap = LockableFeatureMap(TagSet(TaskType.CLASSIFICATION))
         self.featureMap.mutable = True
 
-    def readInstance(self, corpus):
+    def readInstance(self, corpus, stop=0):
         """
         从语料库读取实例, 在这里调用不同特征函数获取特征值
         -param corpus 语料库
@@ -31,9 +31,12 @@ class Features():
         """
         instanceList = []
         lineIterator = pd.read_csv(corpus).loc[:,[True, True]].values
-        #lineIterator = lineIterator[:2]
+
+        if stop > 0:
+            lineIterator = lineIterator[:stop]
+
         for i, line in enumerate(lineIterator):
-            print(f'训练条目总数:{i}/{len(lineIterator)}')
+            print(f'\r训练条目总数:{i}/{len(lineIterator)}', end='...')
             text, label = line
             
             x = self.extractFeature(text, self.featureMap)
@@ -45,6 +48,8 @@ class Features():
                 raise ValueError("类别数目大于2，目前只支持二分类")
 
             instanceList.append(Instance(x, y))
+
+        print('')
 
         return instanceList
 

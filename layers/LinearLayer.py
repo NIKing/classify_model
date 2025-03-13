@@ -49,4 +49,8 @@ class LinearLayer():
         """仿射函数（当偏置等于 0 时，仿射函数就是线性函数 y = w*x ）"""
         return np.dot(features, self.weight_matrix)
 
+    def update_weight(self, weights):
+        """更新权重"""
+        self.weight_matrix = weights
+
 
