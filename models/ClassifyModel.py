@@ -11,15 +11,15 @@ class ClassifyModel(Model):
         self.in_features = None
         
         # 若无必要，勿增实体。第0层没有神经元，就不要申明网络层次，让模型去学习他
-        self.linear1 = LinearLayer(seq_size, 6)
-        self.linear2 = LinearLayer(6, 6)
-        self.linear3 = LinearLayer(6, label_size)
+        self.linear1 = LinearLayer(seq_size, 128)
+        self.linear2 = LinearLayer(128, 128)
+        self.linear3 = LinearLayer(128, label_size)
 
-        self.dropout1 = DropoutLayer(0.8)
+        self.dropout1 = DropoutLayer(0.5)
         self.dropout2 = DropoutLayer(0.5)
 
-        self.normal1 = NormalLayer([6])
-        self.normal2 = NormalLayer([6])
+        self.normal1 = NormalLayer([128])
+        self.normal2 = NormalLayer([128])
 
         self.activation_fn = Fn.ReLU
 
@@ -39,16 +39,16 @@ class ClassifyModel(Model):
         h_1 = self.linear1(features)
         h_1 = self.activation_fn(h_1)
 
-        h_1 = self.normal1(h_1)
-        h_1 = self.dropout1(h_1)
+        h_1 = self.normal1(h_1) if self.normal1 != None else h_1
+        h_1 = self.dropout1(h_1) if self.dropout1 != None else h_1
         #print(f'h_1={h_1}')
         
         # 第二层
         h_2 = self.linear2(h_1)
         h_2 = self.activation_fn(h_2)
 
-        h_2 = self.normal2(h_2)
-        h_2 = self.dropout2(h_2)
+        h_2 = self.normal2(h_2) if self.normal2 != None else h_2
+        h_2 = self.dropout2(h_2) if self.dropout2 != None else h_2
         #print(f'h_2={h_2}')
 
         h_3 = self.linear3(h_2)

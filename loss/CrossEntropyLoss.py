@@ -22,10 +22,13 @@ class CrossEntropyLoss(Loss):
         
         self.batch_size = target.shape[0]
 
+        # 预测概率分布
+        logist = Fn.SoftMax(predict)
+
         # 损失值，只是衡量模型“误差”
-        self.loss = -np.mean(np.sum(target * np.log(Fn.SoftMax(predict)), axis=1))
+        self.loss = -np.mean(np.sum(target * np.log(logist), axis=1))
         
         # 输出层误差，它是输出层的梯度
-        self.loss_error = predict - target
+        self.loss_error = logist - target
 
         return self

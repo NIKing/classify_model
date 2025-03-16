@@ -16,10 +16,9 @@ def Identical(net_input):
     """恒等激活函数"""
     return net_input
 
-
 def Sigmoid(net_input):
     """损失函数-S型函数"""
-    return 1 / 1 + np.exp(-net_input)
+    return 1 / (1 + np.exp(-net_input))
 
 def Sigmoid_delta(net_input):
     return Sigmoid(net_input) * (1 - Sigmoid(net_input))
