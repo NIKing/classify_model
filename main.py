@@ -19,7 +19,7 @@ id2tag = {0: 1, 1: -1}
 model = ClassifyModel(seq_size=3, label_size=len(id2label))
 
 loss_fn = BCELoss(model, reduction='sum')
-optim = SGD(model, lr=1e-3)
+optim = SGD(model, lr=1e-3, momentum=0)
 
 max_epoch = 20
 
@@ -58,7 +58,6 @@ def train(train_dataset):
             
             if batch_num % 10 == 0:
                 print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss_sum / batch_num}; ')
-                print('')
 
             batch_data = next(train_data)
 
