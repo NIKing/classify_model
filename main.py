@@ -19,7 +19,7 @@ id2tag = {0: 1, 1: -1}
 model = ClassifyModel(seq_size=3, label_size=len(id2label))
 
 loss_fn = BCELoss(model, reduction='sum')
-optim = SGD(model)
+optim = SGD(model, lr=1e-3)
 
 max_epoch = 20
 

@@ -1,9 +1,10 @@
 import numpy as np
 
 class SGD():
-    def __init__(self, model, parameters=None, lr=1e-5):
+    def __init__(self, model, lr=1e-5, momentum=0):
         self.model = model
         self.learning_rate = lr
+        self.momentum = momentum
         
     def zero_grad(self):
         pass
@@ -12,7 +13,7 @@ class SGD():
         layer_items = list(self.model.layers.values())
          
         # 从后向前计算梯度
-        for i in range(len(layer_items) - 1, -1, -1):
+        for i in range(len(layer_items)):
             linear_layer, dropout_layer, normal_layer = layer_items[i]['linear'], layer_items[i]['dropout'], layer_items[i]['normal']
             gradient, gamma_gradient, beta_gradient = layer_items[i]['gradient'], layer_items[i]['gamma_gradient'], layer_items[i]['beta_gradient']
              
@@ -21,6 +22,7 @@ class SGD():
             #print(f'第{i}层的梯度:', gradient)
 
             # 新权重参数
+            new_weight = 
             new_weight = current_weight - self.learning_rate * gradient
 
             # 更新参数 

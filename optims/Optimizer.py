@@ -1,6 +1,6 @@
 
 class Optimizer():
-    def __init__(self, params = iter, defaults = dict):
+    def __init__(self, params=iter, defaults=dict):
         self.params = params
         self.defaults = defaults
 
