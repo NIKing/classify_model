@@ -3,8 +3,6 @@ class Model():
         self.layers = {}
         self.training = True
 
-        self.learning_reate = 1e-3
-
     def __call__(self, input_ids, *args, **kwargs):
         return self.forward(input_ids, *args, **kwargs)
     

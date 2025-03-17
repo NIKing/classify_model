@@ -4,10 +4,9 @@ from models.Model import Model
 from layers import LinearLayer, DropoutLayer, NormalLayer
 
 class ClassifyModel(Model):
-    def __init__(self, lr=0.0, seq_size=0, label_size=0):
+    def __init__(self, seq_size=0, label_size=0):
         super(ClassifyModel, self).__init__()
      
-        self.learning_rate = lr
         self.in_features = None
         
         # 若无必要，勿增实体。第0层没有神经元，就不要申明网络层次，让模型去学习他
@@ -24,9 +23,18 @@ class ClassifyModel(Model):
         self.activation_fn = Fn.ReLU
 
         self.layers = {
-            'h1': {'linear': self.linear1, 'dropout': self.dropout1, 'normal': self.normal1, 'delta_fn': Fn.ReLU_delta},
-            'h2': {'linear': self.linear2, 'dropout': self.dropout2, 'normal': self.normal2, 'delta_fn': Fn.ReLU_delta},
-            'h3': {'linear': self.linear3, 'dropout': None, 'normal': None, 'delta_fn': None}
+            'h1': {
+                'linear': self.linear1, 'dropout': self.dropout1, 'normal': self.normal1, 'delta_fn': Fn.ReLU_delta, 
+                'gradient': None, 'gamma_gradient': None, 'beta_gradient': None
+            },
+            'h2': {
+                'linear': self.linear2, 'dropout': self.dropout2, 'normal': self.normal2, 'delta_fn': Fn.ReLU_delta, 
+                'gradient': None, 'gamma_gradient': None, 'beta_gradient': None
+            },
+            'h3': {
+                'linear': self.linear3, 'dropout': None, 'normal': None, 'delta_fn': None, 'gradient': None,
+                'gradient': None, 'gamma_gradient': None, 'beta_gradient': None
+            }
         }
 
     def forward(self, features, is_train=True):

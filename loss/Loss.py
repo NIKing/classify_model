@@ -34,7 +34,8 @@ class Loss():
          
         # 从后向前计算梯度
         for i in range(len(layer_items) - 1, -1, -1):
-            linear_layer, dropout_layer, normal_layer, delta_fn = layer_items[i].values()
+            linear_layer, dropout_layer = layer_items[i]['linear'], layer_items[i]['dropout']
+            normal_layer, delta_fn = layer_items[i]['normal'], layer_items[i]['delta_fn']
             
             # 计算误差，这里误差指的既不是【上一层误差】也不是【当前层误差】，而是上一层与当前层连接的【变化率】
             if i == len(layer_items) - 1:
@@ -59,35 +60,18 @@ class Loss():
                 layer_error *= dropout_layer.d
 
             # 计算当前层权重参数梯度：连接误差值 * 当前层输入（上一层的输出）, 由链式法则推导得出
-            layer_gradient = np.dot(current_input.T, layer_error) / self.batch_size
-
-            current_weight = np.array(linear_layer.weight_matrix)
-            #print(f'第{i}层的权重:', current_weight)
-            #print(f'第{i}层的梯度:', layer_gradient)
-
-            # 更新参数
-            new_weight = current_weight - self.model.learning_rate * layer_gradient
-
-            # 恢复权重形状，保存到网络层
-            #print(f'第{i}层的新权重:', new_weight)
-            linear_layer.update_weight(new_weight)
+            layer_items[i]['gradient'] = np.dot(current_input.T, layer_error) / self.batch_size
             
             if normal_layer != None:
                 # 计算当前层归一化缩放因子参数, 注意需要按照特征维度，合并多个样本的值
-                layer_gamma_gradient = np.sum(normal_layer.net_input_normal * layer_error, axis=0) / self.batch_size
-                new_gamma = normal_layer.gamma - self.model.learning_rate * layer_gamma_gradient
-                
-                normal_layer.update_gamma(new_gamma)
+                layer_items[i]['gamma_gradient'] = np.sum(normal_layer.net_input_normal * layer_error, axis=0) / self.batch_size
                 
                 # 计算当前层平移参数
-                layer_beta_gradient = np.sum(layer_error, axis=0) / self.batch_size
-                new_beta = normal_layer.beta - self.model.learning_rate * layer_beta_gradient
-
-                normal_layer.update_beta(new_beta)
+                layer_items[i]['beta_gradient'] = np.sum(layer_error, axis=0) / self.batch_size
             
             # 记录当前信息，用于误差传播
             next_layer_error = layer_error
-            next_layer_weight = current_weight
+            next_layer_weight = np.array(linear_layer.weight_matrix) 
 
             #print('*'*80)
 

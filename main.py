@@ -6,6 +6,7 @@ from dataloader import DataLoader
 
 from loss import BCELoss, CrossEntropyLoss
 from feature import Features
+from optims import SGD
 
 seed = 40
 random.seed(seed)
@@ -15,8 +16,10 @@ np.random.seed(seed)
 id2label = {0: '男', 1: '女'}
 id2tag = {0: 1, 1: -1}
 
-model = ClassifyModel(lr=1e-3, seq_size=3, label_size=len(id2label))
+model = ClassifyModel(seq_size=3, label_size=len(id2label))
+
 loss_fn = BCELoss(model, reduction='sum')
+optim = SGD(model)
 
 max_epoch = 20
 
@@ -47,6 +50,8 @@ def train(train_dataset):
 
             # 反向传播-计算梯度
             loss.backward()
+
+            optim.step()
 
             batch_num += 1
             loss_sum += loss.item()
@@ -125,7 +130,7 @@ if __name__ == '__main__':
 
     feature = Features()
 
-    train_instance_list = feature.readInstance('./cnname/train.csv')
+    train_instance_list = feature.readInstance('./cnname/train.csv', 1000)
     train_distributions = statistic_type_distribution(train_instance_list)
     print([f'类型{key}的数量：{value}' for key, value in train_distributions.items()])
     #exit()
@@ -134,7 +139,7 @@ if __name__ == '__main__':
     #train_instance_list = [train_instance_list[0] for _ in range(max_epoch)]
     train(train_instance_list)
     
-    test_instance_list = feature.readInstance('./cnname/test.csv')
+    test_instance_list = feature.readInstance('./cnname/test.csv', 10)
     test(test_instance_list)
 
 
