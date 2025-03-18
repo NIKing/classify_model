@@ -4,10 +4,10 @@ import numpy as np
 class SGD():
     def __init__(self, model, lr=1e-5, momentum=0):
         self.model = model
-        self.velocity = 0
-
         self.learning_rate = lr
+        
         self.momentum = momentum
+        self.velocity = 0
         
     def zero_grad(self):
         pass
@@ -15,7 +15,7 @@ class SGD():
     def step(self):
         layer_items = list(self.model.layers.values())
         
-        # 初始化动量值
+        # 初始化速率
         if self.velocity == 0:
             self.velocity = [0] * len(layer_items)
 
@@ -24,13 +24,12 @@ class SGD():
             linear_layer, dropout_layer, normal_layer = layer_items[i]['linear'], layer_items[i]['dropout'], layer_items[i]['normal']
             gradient, gamma_gradient, beta_gradient = layer_items[i]['gradient'], layer_items[i]['gamma_gradient'], layer_items[i]['beta_gradient']
              
-            current_weight = np.array(linear_layer.weight_matrix)
-            #print(f'第{i}层的权重:', current_weight.shape)
             #print(f'第{i}层的梯度:', gradient)
+            
+            self.velocity[i] = self.momentum * self.velocity[i] + self.learning_rate * gradient
 
             # 新权重参数 - 添加"动量"
-            self.velocity[i] = self.momentum * self.velocity[i] + self.learning_rate * gradient
-            new_weight = current_weight - self.velocity[i]
+            new_weight = np.array(linear_layer.weight_matrix) - self.velocity[i]
 
             # 更新参数 
             #print(f'第{i}层的新权重:', new_weight)

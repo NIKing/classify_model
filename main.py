@@ -6,7 +6,7 @@ from dataloader import DataLoader
 
 from loss import BCELoss, CrossEntropyLoss
 from feature import Features
-from optims import SGD
+from optims import SGD, Adam
 
 seed = 40
 random.seed(seed)
@@ -19,17 +19,18 @@ id2tag = {0: 1, 1: -1}
 model = ClassifyModel(seq_size=3, label_size=len(id2label))
 
 loss_fn = BCELoss(model, reduction='sum')
-optim = SGD(model, lr=1e-3, momentum=0)
+#optim = SGD(model, lr=1e-3, momentum=0.9)
+optim = Adam(model)
 
-max_epoch = 20
+max_epoch = 5
 
-def train(train_dataset):
+def train(train_dataset, test_dataset):
     
+    best_epoch, best_loss, best_f1, best_p, best_r = 0, 0, 0, 0, 0
+
     # 迭代训练，用于查看损失函数变化
     for i in range(max_epoch):
         print('*'*40, f'第{i+1}轮次训练', '*'*40)
-
-        model.train()
         
         train_data = DataLoader(train_dataset, shuffle=True, batch_size=10)
         batch_data = next(train_data)
@@ -60,11 +61,19 @@ def train(train_dataset):
                 print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss_sum / batch_num}; ')
 
             batch_data = next(train_data)
+        
+       
+        p, r, f1 = test(test_dataset)
+        if f1 > best_f1:
+            best_epoch = i + 1
+            best_f1 = f1
+            best_p = p
+            best_r = r
+            best_loss = loss_sum / batch_num
 
+    print(f'best_epoch={best_epoch}; best_loss={best_loss}; f1={best_f1}; p={best_p}; r={best_r}')
 
 def test(test_dataset):
-    model.eval()
-    
     test_data = DataLoader(test_dataset, shuffle=False, batch_size=2)
     
     batch_data = next(test_data)
@@ -94,12 +103,14 @@ def test(test_dataset):
     p, r, f1 = evaluate(result_list)
     print(f'p={p}, r={r}, f1={f1}')
 
+    return p, r, f1
+
 def evaluate(result_list):
     predict_total, gold_total, correct_total = 0, 0, 0
     for predict_list, gold_list in result_list:
-        print(predict_list)
-        print(gold_list)
-        print()
+        #print(predict_list)
+        #print(gold_list)
+        #print()
 
         correct_total += len(list(filter(lambda x: x == True, [predict_list[i] == gold_list[i] for i in range(len(predict_list))])))
         predict_total += len(predict_list)
@@ -131,14 +142,15 @@ if __name__ == '__main__':
 
     train_instance_list = feature.readInstance('./cnname/train.csv', 1000)
     train_distributions = statistic_type_distribution(train_instance_list)
-    print([f'类型{key}的数量：{value}' for key, value in train_distributions.items()])
     #exit()
     
+    test_instance_list = feature.readInstance('./cnname/test.csv', 10)
+
     # 单样本数据集
     #train_instance_list = [train_instance_list[0] for _ in range(max_epoch)]
-    train(train_instance_list)
+    train(train_instance_list, test_instance_list)
+    print([f'训练数据，类型{key}的数量：{value}' for key, value in train_distributions.items()])
     
-    test_instance_list = feature.readInstance('./cnname/test.csv', 10)
-    test(test_instance_list)
+    #test(test_instance_list)
 
 
