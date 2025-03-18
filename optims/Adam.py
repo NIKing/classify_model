@@ -6,7 +6,7 @@ class Adam():
         self.learning_rate = lr
 
         self.betas = betas
-        self.epsilon = eps
+        self.epsilon = eps  # 稳定器，若没有此参数，np.sqrt() 的结果有可能等于 0 ，从而导致梯度消失。
         
         self.momentum = 0
         self.velocity = 0
@@ -35,7 +35,7 @@ class Adam():
             #print(momentum)
             #print(velocity)
             #print()
-            new_weight = np.array(linear_layer.weight_matrix) - (self.learning_rate / np.sqrt(velocity + self.eps)) * momentum
+            new_weight = np.array(linear_layer.weight_matrix) - (self.learning_rate / np.sqrt(velocity + self.epsilon)) * momentum
 
             # 更新参数 
             #print(f'第{i}层的新权重:', new_weight)

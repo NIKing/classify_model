@@ -17,7 +17,7 @@ class BCELoss(Loss):
         
         # 预测概率分布
         logist = Fn.Sigmoid(predict)
-        print('logist', logist)
+        #print('logist', logist)
 
         # 剪枝，需要把概率限制在一定范围内，否则下面的 1 - logist 会造成 log(0) 的情况
         logist = np.clip(logist, 1e-7, 1 - 1e-7)
