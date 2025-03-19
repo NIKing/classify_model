@@ -20,7 +20,7 @@ model = ClassifyModel(seq_size=3, label_size=len(id2label))
 
 loss_fn = BCELoss(model, reduction='sum')
 #optim = SGD(model, lr=1e-3, momentum=0.9)
-optim = Adam(model)
+optim = Adam(model, lr=1e-3)
 
 max_epoch = 5 
 
@@ -82,7 +82,7 @@ def test(test_dataset):
     
     batch_num = 1
     while test_data.is_next():
-        print(f'Test Epoech:{batch_num}/{len(test_dataset)}')
+        print(f'\rTest Epoech:{batch_num}/{len(test_dataset)}', end='...')
         
         features = [t.x for t in batch_data]
         results = [t.y for t in batch_data]
@@ -99,6 +99,8 @@ def test(test_dataset):
 
         batch_data = next(test_data)
         batch_num += 1
+    
+    print()
 
     p, r, f1 = evaluate(result_list)
     print(f'p={p}, r={r}, f1={f1}')
@@ -116,7 +118,7 @@ def evaluate(result_list):
         predict_total += len(predict_list)
         gold_total += len(gold_list)
     
-    print(predict_total, gold_total, correct_total)
+    #print(predict_total, gold_total, correct_total)
     precise = correct_total / (predict_total + 1e-5)
     recall = correct_total / (gold_total + 1e-5)
 

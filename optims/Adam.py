@@ -1,5 +1,6 @@
 import numpy as np
 
+"""自适应学习率"""
 class Adam():
     def __init__(self, model, lr=1e-2, betas=(0.9, 0.999), eps=1e-08):
         self.model = model
@@ -16,13 +17,14 @@ class Adam():
     def step(self):
         layer_items = list(self.model.layers.values())
 
+        self.time += 1
+
         for i in range(len(layer_items)):
             linear_layer, dropout_layer, normal_layer = layer_items[i]['linear'], layer_items[i]['dropout'], layer_items[i]['normal']
             gradient, gamma_gradient, beta_gradient = layer_items[i]['gradient'], layer_items[i]['gamma_gradient'], layer_items[i]['beta_gradient']
 
             # 更新权重参数 
             new_weight = self.caclulate_weight('weight', i, gradient, linear_layer.weight_matrix)
-            #print(f'第{i}层的新权重:', new_weight)
             linear_layer.update_weight(new_weight)
             
             if normal_layer != None:
@@ -35,8 +37,6 @@ class Adam():
                 normal_layer.update_beta(new_beta)
 
 
-        self.time += 1
-
     def caclulate_weight(self, _type, layer_number, gradient, weight):
         """
         计算新权重
@@ -45,17 +45,16 @@ class Adam():
         -param gradient tensors 当前的梯度信息
         -param weight tensors 当前的权重信息
         """
+
+        # 计算动量值
         self.momentum[_type][layer_number] = self.betas[0] * self.momentum[_type][layer_number] + (1 - self.betas[0]) * gradient
+
+        # 计算速率（二阶矩阵）
         self.velocity[_type][layer_number] = self.betas[1] * self.velocity[_type][layer_number] + (1 - self.betas[1]) * gradient ** 2
-        #print('1,', self.momentum[i])
-        #print('2,', self.velocity[i])
         
         # 偏差矫正（补偿初始零偏置）
         momentum = self.momentum[_type][layer_number] / (1 - self.betas[0] ** self.time)
         velocity = self.velocity[_type][layer_number] / (1 - self.betas[1] ** self.time)
 
-        #print(momentum)
-        #print(velocity)
-        #print()
         return np.array(weight) - (self.learning_rate / np.sqrt(velocity + self.epsilon)) * momentum
 
