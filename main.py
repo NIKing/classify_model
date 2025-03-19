@@ -19,10 +19,10 @@ id2tag = {0: 1, 1: -1}
 model = ClassifyModel(seq_size=3, label_size=len(id2label))
 
 loss_fn = BCELoss(model, reduction='sum')
-optim = SGD(model, lr=1e-3, momentum=0)
-#optim = Adam(model)
+#optim = SGD(model, lr=1e-3, momentum=0.9)
+optim = Adam(model)
 
-max_epoch = 5
+max_epoch = 5 
 
 def train(train_dataset, test_dataset):
     
@@ -57,7 +57,7 @@ def train(train_dataset, test_dataset):
             batch_num += 1
             loss_sum += loss.item()
             
-            if batch_num % 1 == 0:
+            if batch_num % 10 == 0:
                 print(f'epoch:{i + 1}; batch_size:{batch_num}; loss:{loss_sum / batch_num}; ')
 
             batch_data = next(train_data)
@@ -140,11 +140,11 @@ if __name__ == '__main__':
 
     feature = Features()
 
-    train_instance_list = feature.readInstance('./cnname/train.csv', 1000)
+    train_instance_list = feature.readInstance('./cnname/train.csv', 2000)
     train_distributions = statistic_type_distribution(train_instance_list)
     #exit()
     
-    test_instance_list = feature.readInstance('./cnname/test.csv', 10)
+    test_instance_list = feature.readInstance('./cnname/test.csv', 100)
 
     # 单样本数据集
     #train_instance_list = [train_instance_list[0] for _ in range(max_epoch)]
