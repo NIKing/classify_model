@@ -52,6 +52,15 @@ class Adam():
         # 计算速率（二阶矩阵）
         self.velocity[_type][layer_number] = self.betas[1] * self.velocity[_type][layer_number] + (1 - self.betas[1]) * gradient ** 2
         
+        if len(gradient.shape) <= 1 and layer_number == 0 and self.time == 1:
+            print('原始梯度')
+            print(gradient)
+            print()
+
+            print('二阶矩')
+            print(self.velocity[_type][layer_number])
+            print()
+
         # 偏差矫正（补偿初始零偏置）
         momentum = self.momentum[_type][layer_number] / (1 - self.betas[0] ** self.time)
         velocity = self.velocity[_type][layer_number] / (1 - self.betas[1] ** self.time)
