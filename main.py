@@ -6,7 +6,7 @@ from dataloader import DataLoader
 
 from loss import BCELoss, CrossEntropyLoss
 from feature import Features
-from optims import SGD, Adam
+from optims import SGD, Adam, RMSProp
 
 seed = 40
 random.seed(seed)
@@ -21,6 +21,7 @@ model = ClassifyModel(seq_size=3, label_size=len(id2label))
 loss_fn = BCELoss(model, reduction='sum')
 #optim = SGD(model, lr=1e-3, momentum=0.9)
 optim = Adam(model, lr=1e-3)
+#optim = RMSProp(model)
 
 max_epoch = 5 
 

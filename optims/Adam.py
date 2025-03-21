@@ -2,7 +2,7 @@ import numpy as np
 
 """自适应学习率"""
 class Adam():
-    def __init__(self, model, lr=1e-2, betas=(0.9, 0.999), eps=1e-08):
+    def __init__(self, model, lr=3e-4, betas=(0.9, 0.999), eps=1e-08):
         self.model = model
         self.learning_rate = lr
         
@@ -24,20 +24,20 @@ class Adam():
             gradient, gamma_gradient, beta_gradient = layer_items[i]['gradient'], layer_items[i]['gamma_gradient'], layer_items[i]['beta_gradient']
 
             # 更新权重参数 
-            new_weight = self.caclulate_weight('weight', i, gradient, linear_layer.weight_matrix)
+            new_weight = self._algorithm('weight', i, gradient, linear_layer.weight_matrix)
             linear_layer.update_weight(new_weight)
             
             if normal_layer != None:
                 # 计算当前层归一化缩放因子参数, 注意需要按照特征维度，合并多个样本的值
-                new_gamma = self.caclulate_weight('gamma', i, gamma_gradient, normal_layer.gamma)
+                new_gamma = self._algorithm('gamma', i, gamma_gradient, normal_layer.gamma)
                 normal_layer.update_gamma(new_gamma)
                 
                 # 计算当前层平移参数
-                new_beta = self.caclulate_weight('beta', i, beta_gradient, normal_layer.beta)
+                new_beta = self._algorithm('beta', i, beta_gradient, normal_layer.beta)
                 normal_layer.update_beta(new_beta)
 
 
-    def caclulate_weight(self, _type, layer_number, gradient, weight):
+    def _algorithm(self, _type, layer_number, gradient, weight):
         """
         计算新权重
         -param _type str 需要计算哪个类别的权重
@@ -65,5 +65,5 @@ class Adam():
         momentum = self.momentum[_type][layer_number] / (1 - self.betas[0] ** self.time)
         velocity = self.velocity[_type][layer_number] / (1 - self.betas[1] ** self.time)
 
-        return np.array(weight) - (self.learning_rate / np.sqrt(velocity + self.epsilon)) * momentum
+        return np.array(weight) - self.learning_rate / (np.sqrt(velocity) + self.epsilon) * momentum
 

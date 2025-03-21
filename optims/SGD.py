@@ -26,9 +26,9 @@ class SGD():
             gradient, gamma_gradient, beta_gradient = layer_items[i]['gradient'], layer_items[i]['gamma_gradient'], layer_items[i]['beta_gradient']
              
             #print(f'第{i}层的梯度:', gradient)
-            self.velocity[i] = self.momentum * self.velocity[i] + gradient
-
+            
             # 新权重参数 - 添加"动量"
+            self.velocity[i] = self.momentum * self.velocity[i] + gradient
             new_weight = np.array(linear_layer.weight_matrix) - self.learning_rate * self.velocity[i]
 
             # 更新参数 
